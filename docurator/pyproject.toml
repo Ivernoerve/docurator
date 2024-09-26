@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "docurator"
 version = "0.1.0"
-description = ""
-authors = ["Ivernoerve-mbp14 <ino033@uit.no>"]
+description = "Decorator for docs retrieval."
+authors = ["Iver Schei Noerve <iver@noerve.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 
 
 [build-system]
