@@ -39,7 +39,7 @@ Cons: Add dependency on small open source library
         - docuemnt
         - production (does not collect information)
     - [] Factory function to return decorator based on mode
-    - [] Capture information about function to be documented, store in various `dataclass` depending on type
+    - [x] Capture information about function to be documented, store in various `dataclass` depending on type
         -  name
         -  qualname
         -  docstring
