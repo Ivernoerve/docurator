@@ -1,6 +1,6 @@
 # Project Tracker file
 
-The contents of this file keeps track of the idea/ concept , future ideas, and a prioritised task list
+The contents of this file keeps track of the idea/ concept , future ideas, and a prioritised task list.
 
 
 
@@ -17,6 +17,16 @@ The idea of the docurator is to create a simple automatic documentation creator 
 └── docs
     └── documentation_target
 ```
+
+
+## Dependencies
+
+#### [docstring_parser](https://pypi.org/project/docstring_parser/)
+Description:  Parse Python docstrings. Currently support ReST, Google, Numpydoc-style and Epydoc docstrings.
+
+Pros: The library uses only base python modules, and supports python 3.8 -> 4. Allows for parsing many different docstring types without implementing the logic myself.
+
+Cons: Add dependency on small open source library
 
 
 ## To do
