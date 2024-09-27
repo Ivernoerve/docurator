@@ -35,10 +35,10 @@ Cons: Add dependency on small open source library
 
 1. Create decorator to capture docs
 
-    - [] Two modes
-        - docuemnt
+    - [x] Two modes
+        - document/ doc
         - production (does not collect information)
-    - [] Factory function to return decorator based on mode
+    - [x] Factory function to return decorator based on mode
     - [x] Capture information about function to be documented, store in various `dataclass` depending on type
         -  name
         -  qualname
@@ -46,8 +46,10 @@ Cons: Add dependency on small open source library
         -  signature
         -  module 
         -  object type (inferred by module)
-    - [] Class for storing all the captured documentation. 
+    - [x] Class for storing all the captured documentation. 
         - how? Partition by module, all in one list
+            - per now all in one list
+
 
 
 2. Create module traverser
