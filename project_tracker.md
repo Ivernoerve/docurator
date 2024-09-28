@@ -19,6 +19,13 @@ The idea of the docurator is to create a simple automatic documentation creator 
 ```
 
 
+### Docurator dataclasses hierarchy
+
+* Docs: Contains the base doc attributes and is the base for all others.
+* ModuleDocs: Contains Doc for modules and a list of all documented objects within
+* ObjectDocs: Contains attributes to document objects
+* ClassDocs: Innherits from object docs, but contains a list to store containing methods.
+
 ## Dependencies
 
 #### [docstring_parser](https://pypi.org/project/docstring_parser/)
@@ -48,7 +55,7 @@ Cons: Add dependency on small open source library
         -  object type (inferred by module)
     - [x] Class for storing all the captured documentation. 
         - how? Partition by module, all in one list
-            - per now all in one list
+
 
 
 
@@ -73,6 +80,16 @@ Cons: Add dependency on small open source library
     
     - [] Support templating to allow for user documentation in addition to auto doc
         - How to match the templates to the auto-documentation? Module name?
+
+```
+.
+├── src
+│   └── module
+└── docs
+    ├── documentation_target
+    └── templates
+```
+
 
 * Use sphinx with md to compile result. 
 
