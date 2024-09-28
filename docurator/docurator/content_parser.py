@@ -1,4 +1,7 @@
-from docstring_parser import google
+# ruff: noqa
+# This ignores all errors in this file. It is present as this is a work in progress/ test file at the moment.
+# Remove when work on this files implementations are performed.
+
 from module_traverser import invoke_modules
 from docurator import docurator
 from doc_containers import ClassDocs, Docs
