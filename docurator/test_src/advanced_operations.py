@@ -5,9 +5,9 @@ advanced_operations.py
 This module provides more advanced operations, such as solving a quadratic equation,
 finding the Fibonacci sequence up to a given number, and implementing a custom cache class.
 """
-
 import math
 from typing import List, Optional
+from docurator import document_me
 
 
 def solve_quadratic(a: float, b: float, c: float) -> Optional[List[float]]:
@@ -47,7 +47,7 @@ def solve_quadratic(a: float, b: float, c: float) -> Optional[List[float]]:
         root2 = (-b - math.sqrt(discriminant)) / (2 * a)
         return [root1, root2]
 
-
+@document_me
 def fibonacci_sequence(n: int) -> List[int]:
     """Generate a list containing the Fibonacci sequence up to the nth term.
 
@@ -79,17 +79,18 @@ def fibonacci_sequence(n: int) -> List[int]:
     return sequence[:n]
 
 
+@document_me
 class Cache:
     """A simple cache to store and retrieve values based on keys.
 
     This cache uses a dictionary internally to store key-value pairs and provides
     methods to add, retrieve, and clear the cache.
     """
-
     def __init__(self):
         """Initialize an empty cache."""
         self._store = {}
 
+    @document_me
     def add(self, key: str, value: any) -> None:
         """Add a value to the cache with a specific key.
 
@@ -105,6 +106,7 @@ class Cache:
         """
         self._store[key] = value
 
+    @document_me
     def retrieve(self, key: str) -> Optional[any]:
         """Retrieve a value from the cache by its key.
 
@@ -125,6 +127,7 @@ class Cache:
         """
         return self._store.get(key)
 
+    @document_me
     def clear(self) -> None:
         """Clear all entries from the cache.
 
