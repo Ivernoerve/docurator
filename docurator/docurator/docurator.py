@@ -22,8 +22,8 @@ Usage:
 """
 import logging
 from typing import Callable, TypeVar, Any
-from inspect import signature, getmodule
-from doc_containers import Docs, ModuleDocs, ObjectDocs
+import inspect
+from doc_containers import Docs, ModuleDocs, ObjectDocs, ClassDocs
 
 logger = logging.getLogger(__name__)
 CallableObject = TypeVar("F", bound=Callable[..., Any])
@@ -37,11 +37,16 @@ class Docurator:
     """
     def __init__(self):
         """Initializes an empty list to store documentation information."""
-        self.__docs = {}
+        self.__module_docs = {}
+
+        # Due to class method wrappers being initialized prior
+        # to the class wrapper, this stores the methods to be appended
+        # to the calss at a later time.
+        self.__class_method_cache = {}
 
     @property
     def docs(self) -> dict[str, Docs]:
-        return self.__docs
+        return self.__module_docs
 
     def add(self, func: CallableObject) -> None:
         """Adds documentation information for a given callable object.
@@ -56,30 +61,90 @@ class Docurator:
             f = func.__func__
         else: 
             f = func
-        
+
         if not callable(f):
             raise ValueError('The provided object must be callable.')
         
-        module = getmodule(f)
-        module_docs = self.__docs.get(module.__name__)
+        module = inspect.getmodule(f)
+        module_docs = self.__module_docs.get(module.__name__)
         if module_docs is None:
             module_docs = ModuleDocs(
                 module.__name__, 
                 module.__doc__
             )
-            self.__docs[module.__name__] = module_docs
+            self.__module_docs[module.__name__] = module_docs
 
-        doc_content = ObjectDocs(
-            docstring=f.__doc__, 
-            name=f.__name__,
-            qualname=f.__qualname__,
-            type=f.__class__.__name__,
-            f_signature = signature(f),
-        )
+        shared_content = {
+            'docstring':f.__doc__, 
+            'name':f.__name__,
+            'qualname':f.__qualname__,
+            'type':f.__class__.__name__,
+            'f_signature': inspect.signature(f),
+        }
+        if inspect.isclass(f):
+            doc_content = self.__create_class_doc(shared_content, f)
+            # Fetch methods from method cache if exists.
+            cached_class_methods = self.__pop_from_method_cache(module.__name__, doc_content.qualname)
+            doc_content.contents.extend(cached_class_methods)
+        else:
+            doc_content = ObjectDocs(**shared_content)
+
+
+        if self.__is_method(f):
+            class_name = self.__create_class_belonging_key(doc_content)
+            if module_docs.contains_class(class_name):
+                module_docs.get_class(class_name).contents.append(doc_content)
+            else:
+                self.__add_to_method_cache(module.__name__, doc_content)
+            return
+
         module_docs.contents.append(doc_content)
+
+
+    @staticmethod
+    def __create_class_doc(base_content: dict, class_: object) -> ClassDocs:
+        parents = [obj for obj in class_.__bases__ if obj is not object]
+        base_content['parents'] = parents or None
+        return ClassDocs(**base_content)
+
+    def __add_to_method_cache(self, module_name: str, doc: ObjectDocs) -> None:
+        method_path = self.__create_class_belonging_key(doc)
+        key = f'{module_name}.{method_path}'
+        cache = self.__class_method_cache.get(key)
+        if cache is None:
+            cache = []
+            self.__class_method_cache[key] = cache
+        cache.append(doc)
+
+    def __pop_from_method_cache(self, module_name: str, class_qualname: str):
+        key = f'{module_name}.{class_qualname}'
+        if self.__class_method_cache.get(key) is not None:
+            methods = self.__class_method_cache.pop(key)
+        else:
+            methods = []
+        return methods
+    
+        
+    @staticmethod
+    def __is_method(func: Callable) -> bool:
+        return len(func.__qualname__.split('.')) > 1
+    
+    @staticmethod
+    def __create_class_belonging_key(doc: ObjectDocs):
+        return '.'.join(doc.qualname.split('.')[:-1])
+
+
+
+
+
+        
+
+        return ClassDocs(**base_content)
+
 
 mode = 'doc'
 docurator = Docurator()
+
 
 
 def decorator_factory(mode: str):

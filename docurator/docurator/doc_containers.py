@@ -1,5 +1,5 @@
 """Conatins container dataclasses to store the different documentations. """
-
+from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Type
 
@@ -36,6 +36,22 @@ class ModuleDocs:
         """Interact with the __object attribute"""
         return self.__contents
 
+    def contains_class(self, class_name: str) -> bool:
+        
+        condition_map = map(
+            lambda doc: (isinstance(doc, ClassDocs)) and (doc.name == class_name),
+            self.__contents
+        )
+        return any(condition_map)
+    
+    def get_class(self, class_name: str) -> ClassDocs:
+        return filter(
+            lambda doc: (isinstance(doc, ClassDocs)) and (doc.name == class_name),
+            self.__contents
+        ).__next__
+
+
+
 
 @dataclass(frozen=True)
 class ObjectDocs(Docs):
@@ -53,7 +69,7 @@ class ObjectDocs(Docs):
     type: str
     f_signature: Type[inspect.signature]
 
-
+@dataclass(frozen=True)
 class ClassDocs(ObjectDocs):
     """Represents documentation information for a class, including its parents.
 
@@ -63,10 +79,11 @@ class ClassDocs(ObjectDocs):
     Attributes:
         name (str): The name of the object.
         docstring (str|None): The docstring of the object, or None if no docstring is provided.
-        parents (List[object]): A list of parent classes of the documented class.
+        parents (List[object]|None): A list of parent classes of the documented class.
+            None if has no parents.
         contents list[Docs]: A list of documentation objects.
     """
-    parents: list[object]
+    parents: list[object]|None
     __contents: list[Docs] = field(default_factory=list)
     
     @property
