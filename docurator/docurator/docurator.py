@@ -22,8 +22,8 @@ Usage:
 """
 import logging
 from typing import Callable, TypeVar, Any
-from inspect import signature
-from doc_containers import Docs
+from inspect import signature, getmodule
+from doc_containers import Docs, ModuleDocs, ObjectDocs
 
 logger = logging.getLogger(__name__)
 CallableObject = TypeVar("F", bound=Callable[..., Any])
@@ -37,7 +37,11 @@ class Docurator:
     """
     def __init__(self):
         """Initializes an empty list to store documentation information."""
-        self.docs = [] 
+        self.__docs = {}
+
+    @property
+    def docs(self) -> dict[str, Docs]:
+        return self.__docs
 
     def add(self, func: CallableObject) -> None:
         """Adds documentation information for a given callable object.
@@ -52,20 +56,27 @@ class Docurator:
             f = func.__func__
         else: 
             f = func
-
+        
         if not callable(f):
             raise ValueError('The provided object must be callable.')
+        
+        module = getmodule(f)
+        module_docs = self.__docs.get(module.__name__)
+        if module_docs is None:
+            module_docs = ModuleDocs(
+                module.__name__, 
+                module.__doc__
+            )
+            self.__docs[module.__name__] = module_docs
 
-        doc_content = Docs(
+        doc_content = ObjectDocs(
             docstring=f.__doc__, 
             name=f.__name__,
             qualname=f.__qualname__,
             type=f.__class__.__name__,
             f_signature = signature(f),
-            module=f.__module__ if hasattr(func, "__module__") else None
         )
-        self.docs.append(doc_content)
-
+        module_docs.contents.append(doc_content)
 
 mode = 'doc'
 docurator = Docurator()
@@ -88,5 +99,3 @@ def decorator_factory(mode: str):
 
 
 document_me = decorator_factory(mode)
-
-
