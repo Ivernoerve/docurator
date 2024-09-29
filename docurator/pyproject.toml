@@ -7,8 +7,35 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+docstring-parser = "^0.16"
 
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.8"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+# Begin Ruff config
+
+[tool.ruff]
+exclude = ["test_src"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "N",
+    "D",
+    "ANN"
+]
+ignore = [
+    "ANN101", "ANN102"
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# End Ruff config

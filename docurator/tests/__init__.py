@@ -1,0 +1,1 @@
+"""Init file for the top level docurator test directory."""

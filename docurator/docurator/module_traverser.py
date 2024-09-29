@@ -1,3 +1,13 @@
+"""Run modules to invoke docurator decorators.
+
+This module provides functionality to dynamically import and invoke all Python 
+modules starting from a given path.
+
+
+Functions:
+    invoke_modules(path: str): Invokes modules at the given directiry 
+        and subdirectories
+"""
 import pkgutil
 import importlib
 import os
