@@ -16,10 +16,25 @@ class Docs:
     """ #noqa: E501
     name: str
     docstring: str|None
+
+    def __eq__(self, other: Docs) -> bool:
+        """Equality for Docs."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.name == other.name
+    
+    def __hash__(self) -> str:
+        """Implement hash on the name.
+        
+        The name of the Docs should be unique within the different scopes they are saved.
+        files must be distinct within the same directory
+        Functions and classes must have distinct names in the various scopes in a file.
+        """ #noqa: E501
+        return hash(self.name)
     
 
 @dataclass(frozen=True)
-class ModuleDocs:
+class ModuleDocs(Docs):
     """Represents documentation information for a module.
 
     Attributes:
@@ -27,8 +42,6 @@ class ModuleDocs:
         docstring (str|None): The docstring of the object, or None if no docstring is provided.
         contents list[Docs]: A list of documentation objects.
     """ #noqa: E501
-    name: str
-    docstring: str|None
     __contents: list[Docs] = field(default_factory=list)
     
     @property
