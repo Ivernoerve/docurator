@@ -16,20 +16,33 @@ class Docs:
     """ #noqa: E501
     name: str
     docstring: str|None
+
+    def __eq__(self, other: Docs) -> bool:
+        """Equality for Docs."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.name == other.name
+    
+    def __hash__(self) -> str:
+        """Implement hash on the name.
+        
+        The name of the Docs should be unique within the different scopes they are saved.
+        files must be distinct within the same directory
+        Functions and classes must have distinct names in the various scopes in a file.
+        """ #noqa: E501
+        return hash(self.name)
     
 
-@dataclass(frozen=True)
-class ModuleDocs:
+@dataclass(frozen=True, eq=False)
+class ModuleDocs(Docs):
     """Represents documentation information for a module.
 
     Attributes:
         name (str): The name of the object.
         docstring (str|None): The docstring of the object, or None if no docstring is provided.
-        contents list[Docs]: A list of documentation objects.
+        contents set[Docs]: A set of documentation objects.
     """ #noqa: E501
-    name: str
-    docstring: str|None
-    __contents: list[Docs] = field(default_factory=list)
+    __contents: set[Docs] = field(default_factory=set)
     
     @property
     def contents(self) -> list[Docs]:
@@ -68,7 +81,7 @@ class ModuleDocs:
 
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=False)
 class ObjectDocs(Docs):
     """Represents documentation information for an object.
 
@@ -84,7 +97,7 @@ class ObjectDocs(Docs):
     type: str
     f_signature: Type[inspect.signature]
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=False)
 class ClassDocs(ObjectDocs):
     """Represents documentation information for a class, including its parents.
 
@@ -96,13 +109,12 @@ class ClassDocs(ObjectDocs):
         docstring (str|None): The docstring of the object, or None if no docstring is provided.
         parents (List[object]|None): A list of parent classes of the documented class.
             None if has no parents.
-        contents list[Docs]: A list of documentation objects.
+        contents set[Docs]: A set of documentation objects.
     """ #noqa: E501
     parents: list[object]|None
-    __contents: list[Docs] = field(default_factory=list)
+    __contents: set[Docs] = field(default_factory=set)
     
     @property
-    def contents(self) -> list[Docs]:
+    def contents(self) -> set[Docs]:
         """Interact with the __object attribute."""
         return self.__contents
-

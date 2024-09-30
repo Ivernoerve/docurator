@@ -91,7 +91,7 @@ class Docurator:
             cached_class_methods = self.__pop_from_method_cache(
                 module_name, doc_content.qualname
             )
-            doc_content.contents.extend(cached_class_methods)
+            doc_content.contents.update(cached_class_methods)
         else:
             doc_content = ObjectDocs(**shared_content)
 
@@ -99,12 +99,11 @@ class Docurator:
         if self.__is_method(f):
             class_name = self.__create_class_belonging_key(doc_content)
             if module_docs.contains_class(class_name):
-                module_docs.get_class(class_name).contents.append(doc_content)
+                module_docs.get_class(class_name).contents.add(doc_content)
             else:
                 self.__add_to_method_cache(module_name, doc_content)
             return
-
-        module_docs.contents.append(doc_content)
+        module_docs.contents.add(doc_content)
 
 
     @staticmethod
@@ -118,16 +117,16 @@ class Docurator:
         key = f'{module_name}.{method_path}'
         cache = self.__class_method_cache.get(key)
         if cache is None:
-            cache = []
+            cache = set()
             self.__class_method_cache[key] = cache
-        cache.append(doc)
+        cache.add(doc)
 
     def __pop_from_method_cache(self, module_name: str, class_qualname: str) -> list[Docs]: #noqa E501
         key = f'{module_name}.{class_qualname}'
         if self.__class_method_cache.get(key) is not None:
             methods = self.__class_method_cache.pop(key)
         else:
-            methods = []
+            methods = set()
         return methods
     
         
