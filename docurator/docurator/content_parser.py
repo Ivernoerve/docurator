@@ -14,22 +14,24 @@ class DocDisplayFormatter:
         self.content = content
 
     
-    
+
+
+if __name__ == '__main__':
 
 
 
-invoke_modules(path)
-temp_doc = docurator
 
+    invoke_modules(path)
+    temp_doc = docurator
 
-
-for name, module in temp_doc.docs.items():
-    print(name)
-    module_docs = module.contents
-    for obj in module_docs:
-        print(obj.name)
-        if isinstance(obj, ClassDocs):
-            for method in obj.contents:
-                print('   - ', method.name)
+    print("------\n\n\n")
+    for name, module in temp_doc.docs.items():
+        print(name)
+        module_docs = module.contents
+        for obj in module_docs:
+            print(obj.name)
+            if isinstance(obj, ClassDocs):
+                for method in obj.contents:
+                    print('   - ', method.name)
 
 
