@@ -2,9 +2,11 @@
 # This ignores all errors in this file. It is present as this is a work in progress/ test file at the moment.
 # Remove when work on this files implementations are performed.
 
-from module_traverser import invoke_modules
+#print(dir(docurator))
+
+from _components.module_traverser import invoke_modules
 from docurator import docurator
-from doc_containers import ClassDocs, Docs
+from _components.doc_containers import ClassDocs, Docs
 
 path = 'docurator'
 
@@ -17,9 +19,6 @@ class DocDisplayFormatter:
 
 
 if __name__ == '__main__':
-
-
-
 
     invoke_modules(path)
     temp_doc = docurator
