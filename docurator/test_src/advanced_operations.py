@@ -7,7 +7,7 @@ finding the Fibonacci sequence up to a given number, and implementing a custom c
 """
 import math
 from typing import List, Optional
-from docurator import document_me
+from docurator.docurator_object import document_me
 
 
 def solve_quadratic(a: float, b: float, c: float) -> Optional[List[float]]:
