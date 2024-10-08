@@ -25,7 +25,7 @@ Usage:
 import logging
 from typing import Callable, TypeVar, Any
 import inspect
-from _components.doc_containers import Docs, ModuleDocs, ObjectDocs, ClassDocs
+from docurator._components.doc_containers import Docs, ModuleDocs, ObjectDocs, ClassDocs
 
 logger = logging.getLogger(__name__)
 CallableObject = TypeVar("F", bound=Callable[..., Any])
