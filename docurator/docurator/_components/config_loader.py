@@ -7,12 +7,12 @@ from docurator._defaults.md_templates import DEFAULT_TEMPLATES
 from docurator._defaults.settings import DEFAULT_CONFIG
 
 class  _TemplateCommonUtilities:
-    """Utility class containing common utilities that can be used for config managment."""
+    """Utility class containing common utilities that can be used for config managment.""" #noqa: E501
     @staticmethod
     def load_yaml(path: str|Path) -> dict:
         """Method to load a yaml.
         
-        Args: 
+        Args:
             path (str|Path): The path pointing to the yaml to load.
         
         Returns:
@@ -52,7 +52,7 @@ class  _TemplateCommonUtilities:
         if type(path) is str:
             path = Path(Path)
         if not (path.exists() and path.is_dir()):
-            raise NotADirectoryError(f'The path: "{path}" Does not point to a directory.')
+            raise NotADirectoryError(f'The path: "{path}" Does not point to a directory.') #noqa E501
     
     
     @staticmethod
@@ -61,6 +61,7 @@ class  _TemplateCommonUtilities:
         
         Args:
             path (str|Path): The path to check.
+            valid_formats (list[str]): The suffixes of hte valid formats.
 
         Raises:
             ValueError: If the given file or any files in the directory has an invalid
@@ -133,7 +134,7 @@ class TemplateSetBuilder:
 
 class ConfigBuilder:
     """Class for building the config to be used by the docurator."""
-    def __init__(self, path: str|None = None):
+    def __init__(self, path: str|None = None) -> None:
         """Init function for the config builder.
         
         Args:
