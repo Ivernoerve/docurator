@@ -5,6 +5,11 @@ from copy import deepcopy
 
 from docurator._defaults.md_templates import DEFAULT_TEMPLATES
 from docurator._defaults.settings import DEFAULT_CONFIG
+from docurator._components.doc_containers import (
+    ModuleDocs,
+    ClassDocs,
+    ObjectDocs
+)
 
 class  _TemplateCommonUtilities:
     """Utility class containing common utilities that can be used for config managment.""" #noqa: E501
@@ -83,7 +88,7 @@ class  _TemplateCommonUtilities:
 
 class TemplateSetBuilder:
     """Class for building the set of templates that are used for documenting."""
-    def __init__(self, path: str|Path) -> None:
+    def __init__(self, path: str|Path = None) -> None:
         """Init function for the template set builder.
         
         Args:
@@ -111,18 +116,28 @@ class TemplateSetBuilder:
             KeyError: If any template file has a name not corresponding 
                 to an existing template.
         """
+        template_mapping = {
+            'module': ModuleDocs,
+            'function': ObjectDocs,
+            'class': ClassDocs
+        }
+
+        output_templates = {
+            v: DEFAULT_TEMPLATES[k] for k, v in template_mapping.items()
+        }
+
         if self.config_path is None:
-            return DEFAULT_TEMPLATES
+            return output_templates
         
-        output_templates = deepcopy(DEFAULT_TEMPLATES)
         not_in_default = []
         for file in self.config_path.iterdir():
             filename = file.stem
-            if output_templates.get(filename) is None:
+            if template_mapping.get(filename) is None:
                 not_in_default.append(file.name)
                 continue
             template = self.utilities.load_yaml(file)
-            output_templates[filename] = template
+            key = template_mapping[filename]
+            output_templates[key] = template
 
         if len(not_in_default) > 0:
             raise KeyError(
