@@ -3,7 +3,7 @@
 
 DEFAULT_CONFIG = {
   'docstring_format': 'google',
-  'extra_fields': [
+  'extra_sections': [
     'Classes',
     'Functions',
     'Decorators',
